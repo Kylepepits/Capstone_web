@@ -62,7 +62,9 @@ class PendingApprovalNotifier
               'is_approved': item['is_approved'],
               'org_description': item['org_description'],
               'org_name': item['org_name'],
-              'org_id': item['org_id'], // Add 'org_id' to the data
+              'org_id': item['org_id'],
+              'proof_firebase_url':
+                  item['proof_firebase_url'], // Include the image URL
               'owner': {
                 'firstname': item['owner']['firstname'],
                 'lastname': item['owner']['lastname'],

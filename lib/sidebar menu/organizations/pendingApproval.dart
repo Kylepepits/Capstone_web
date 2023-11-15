@@ -2,6 +2,7 @@ import 'package:capstone_web/providers/authentication/authProvider.dart';
 import 'package:capstone_web/providers/organization/fetchOrganization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class PendingApprovalsWidget extends ConsumerWidget {
   @override
@@ -34,9 +35,13 @@ class PendingApprovalsWidget extends ConsumerWidget {
   }
 
   Widget _buildApprovalCard(
-      BuildContext context, WidgetRef ref, Map<String, dynamic> approval) {
+    BuildContext context,
+    WidgetRef ref,
+    Map<String, dynamic> approval,
+  ) {
     final bool isApproved = approval['is_approved'];
     final String orgId = approval['org_id'];
+    final String imageUrl = approval['proof_firebase_url']; // Image URL
 
     return Card(
       margin: EdgeInsets.all(8.0),
@@ -73,10 +78,69 @@ class PendingApprovalsWidget extends ConsumerWidget {
               },
               child: Text('Approve'),
             ),
+            SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: () {
+                // Show the image in a dialog when the button is pressed
+                _showImageInNewTab(imageUrl);
+              },
+              child: Text('View Image'),
+            ),
           ],
         ),
       ),
     );
+  }
+
+  // Future<void> _showImageDialog(BuildContext context, String imageUrl) async {
+  //   await showDialog(
+  //     context: context,
+  //     builder: (BuildContext context) {
+  //       return Dialog(
+  //         child: Image.network(
+  //          imageUrl,
+  //           loadingBuilder: (BuildContext context, Widget child,
+  //               ImageChunkEvent? loadingProgress) {
+  //             if (loadingProgress == null) {
+  //               return child;
+  //             }
+  //             return Center(
+  //               child: CircularProgressIndicator(
+  //                 value: loadingProgress.expectedTotalBytes != null
+  //                     ? loadingProgress.cumulativeBytesLoaded /
+  //                         loadingProgress.expectedTotalBytes!
+  //                     : null,
+  //               ),
+  //             );
+  //           },
+  //           errorBuilder: (context, error, stackTrace) {
+  //             // Handle errors, e.g., display a placeholder or error message
+  //             return Text('Error loading image');
+  //           },
+  //         ),
+  //       );
+  //     },
+  //   );
+
+  Future<void> _showImageInNewTab(String imageUrl) async {
+    try {
+      final Uri uri = Uri.parse(imageUrl); // Convert the URL to a Uri object
+      if (await canLaunch(uri.toString())) {
+        await launch(
+          uri.toString(),
+          forceSafariVC:
+              false, // Set this to false to open links in the default browser on iOS
+          forceWebView:
+              false, // Set this to false to open links in the default browser on Android
+        );
+      } else {
+        // Handle the case where the URL can't be launched
+        print('Could not launch $imageUrl');
+      }
+    } catch (e) {
+      // Handle any exceptions that may occur during the launch process
+      print('Error launching URL: $e');
+    }
   }
 
   Future<void> _approveOrganization(
