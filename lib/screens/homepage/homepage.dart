@@ -1,5 +1,6 @@
 import 'package:capstone_web/providers/organization/fetchOrganization.dart';
 import 'package:capstone_web/sidebar%20menu/organizations/allOrganizations.dart';
+import 'package:capstone_web/sidebar%20menu/users/allUsers.dart';
 import 'package:capstone_web/sidebar%20menu/organizations/pendingApproval.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -106,6 +107,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
       case 1:
         return OrganizationListPage();
       case 2:
+        return AllUsersPage();
+      case 3:
         return Center(child: Text('Logging out...'));
       default:
         return Center(child: Text('Content for $_selectedIndex'));

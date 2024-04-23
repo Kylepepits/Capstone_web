@@ -29,12 +29,6 @@ class LoginPage extends HookConsumerWidget {
       duration: const Duration(seconds: 5),
     );
 
-    final animation = useAnimation(
-      Tween(begin: 0.0, end: 1.0).animate(
-        CurvedAnimation(parent: animationController, curve: Curves.linear),
-      ),
-    );
-
     animationController.repeat();
 
     void handleLogin(BuildContext context) async {
@@ -99,8 +93,6 @@ class LoginPage extends HookConsumerWidget {
         showSnackBar(context, apiErrorMessage);
       }
     }
-
-    double screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
       backgroundColor: Color(0xFFEBE3D5), // Background color
