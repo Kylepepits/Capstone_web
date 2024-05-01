@@ -1,4 +1,5 @@
 import 'package:capstone_web/providers/organization/fetchOrganization.dart';
+import 'package:capstone_web/sidebar%20menu/game%20results/gameResults.dart';
 import 'package:capstone_web/sidebar%20menu/organizations/allOrganizations.dart';
 import 'package:capstone_web/sidebar%20menu/users/allUsers.dart';
 import 'package:capstone_web/sidebar%20menu/organizations/pendingApproval.dart';
@@ -83,6 +84,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 label: Text('Users'),
               ),
               NavigationRailDestination(
+                icon: Icon(Icons.gamepad, color: Colors.grey),
+                selectedIcon: Icon(Icons.logout, color: Colors.red),
+                label: Text('Game Results'),
+              ),
+              NavigationRailDestination(
                 icon: Icon(Icons.logout, color: Colors.grey),
                 selectedIcon: Icon(Icons.logout, color: Colors.red),
                 label: Text('Logout'),
@@ -107,9 +113,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
       case 1:
         return OrganizationListPage();
       case 2:
-        return AllUsersPage();
+        return const AllUsersPage();
       case 3:
-        return Center(child: Text('Logging out...'));
+        return const GameResultsPage();
+      case 4:
+        return const GameResultsPage();
       default:
         return Center(child: Text('Content for $_selectedIndex'));
     }
