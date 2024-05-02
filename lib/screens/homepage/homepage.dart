@@ -1,4 +1,6 @@
+import 'package:capstone_web/providers/authentication/authProvider.dart';
 import 'package:capstone_web/providers/organization/fetchOrganization.dart';
+import 'package:capstone_web/screens/login/loginPage.dart';
 import 'package:capstone_web/sidebar%20menu/game%20results/gameResults.dart';
 import 'package:capstone_web/sidebar%20menu/organizations/allOrganizations.dart';
 import 'package:capstone_web/sidebar%20menu/users/allUsers.dart';
@@ -44,6 +46,20 @@ class _DashboardScreenState extends State<DashboardScreen> {
               backgroundColor: Colors.white, // Background color of circle
               foregroundColor: Colors.black, // Text color
             ),
+            SizedBox(width: 10), // Add some spacing
+            // Logout button
+            IconButton(
+              icon: Icon(Icons.logout),
+              onPressed: () async {
+                // Logout user
+                await FirebaseAuth.instance.signOut();
+                // Navigate back to login page
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => LoginPage()),
+                );
+              },
+            ),
           ],
         ),
         backgroundColor: Colors.black, // Dark AppBar for contrast
@@ -71,7 +87,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               NavigationRailDestination(
                 icon: Icon(Icons.business, color: Colors.grey),
                 selectedIcon: Icon(Icons.business, color: Colors.cyan),
-                label: Text('Organizations'),
+                label: Text('Requests'),
               ),
               NavigationRailDestination(
                 icon: Icon(Icons.people, color: Colors.grey),
@@ -98,26 +114,50 @@ class _DashboardScreenState extends State<DashboardScreen> {
           const VerticalDivider(thickness: 1, width: 1),
           // Expanded view for content
           Expanded(
-            child: _buildContent(),
+            child: Consumer(
+              builder: (context, ref, _) => _buildContent(context, ref),
+            ),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildContent() {
+  Widget _buildContent(BuildContext context, WidgetRef ref) {
+    // Retrieve the current user details from the provider
+    final userDetails = ref.read(userDetailsProvider);
+
+    // Check if the user is an admin
+    final bool isAdmin = userDetails.isAdmin;
+
     // Content based on the selected index
     switch (_selectedIndex) {
       case 0:
-        return PendingApprovalsWidget();
+        return isAdmin
+            ? PendingApprovalsWidget()
+            : SizedBox(); // Show PendingApprovalsWidget only for admins
       case 1:
         return OrganizationListPage();
       case 2:
-        return const AllUsersPage();
+        return isAdmin
+            ? const AllUsersPage()
+            : SizedBox(); // Show AllUsersPage only for admins
       case 3:
         return const GameResultsPage();
       case 4:
-        return const GameResultsPage();
+        // Handle logout case
+        return ElevatedButton(
+          onPressed: () async {
+            // Logout user
+            await FirebaseAuth.instance.signOut();
+            // Navigate back to login page
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => LoginPage()),
+            );
+          },
+          child: Text('Logout'),
+        );
       default:
         return Center(child: Text('Content for $_selectedIndex'));
     }

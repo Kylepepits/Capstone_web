@@ -56,6 +56,7 @@ class UserDetailsProvider with ChangeNotifier {
   String? _lastname;
   String? _localId;
   bool _isManager = false;
+  bool _isAdmin = false;
   String? _teamName;
   bool _isOrganizer = false;
   String? _organizationId;
@@ -69,6 +70,7 @@ class UserDetailsProvider with ChangeNotifier {
   String? get lastname => _lastname;
   String? get localId => _localId;
   bool get isManager => _isManager;
+  bool get isAdmin => _isAdmin;
   bool get isOrganizer => _isOrganizer;
   String? get teamName => _teamName;
   String? get organizationName => _organizationName;
@@ -111,6 +113,7 @@ class UserDetailsProvider with ChangeNotifier {
         _lastname = data['lastname'];
         _localId = data['localId'];
         _teamName = data['team_name'];
+        _isAdmin = data['isAdmin'] ?? false;
         _isManager = data['is_manager'] ?? false;
         _isOrganizer = data['is_organizer'] ?? false;
         _organizationId = data['org_id'];
@@ -208,6 +211,7 @@ class UserDetailsProvider with ChangeNotifier {
         _firstname = responseData['firstname'];
         _email = responseData['email'];
         _lastname = responseData['lastname'];
+        _isAdmin = responseData['isAdmin'] ?? false;
         _isManager = responseData['is_manager'] ?? false;
         _isOrganizer = responseData['is_organizer'] ?? false;
         _organizationName = responseData['org_name'];
@@ -220,6 +224,7 @@ class UserDetailsProvider with ChangeNotifier {
         print('Username: $_username');
         print('First Name: $_firstname');
         print('Last Name: $_lastname');
+        print('Admin: $_isAdmin');
         print('isManager: $_isManager');
         print('isOrganizer: $_isOrganizer');
         print('OrganizationID: $_organizationId');
